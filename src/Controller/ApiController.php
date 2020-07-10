@@ -5,6 +5,7 @@ namespace App\Controller;
 
 
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 
 class ApiController
 {
@@ -62,5 +63,49 @@ class ApiController
     public function respondUnauthorized(string $message = 'Not authorized!'): JsonResponse
     {
         return $this->setStatusCode(401)->respondWithErrors($message);
+    }
+
+    /**
+     * @param string $message
+     * @return JsonResponse
+     */
+    public function respondValidationError(string $message = 'Validation error!'): JsonResponse
+    {
+        return $this->setStatusCode(422)->respondWithErrors($message);
+    }
+
+    /**
+     * @param string $message
+     * @return JsonResponse
+     */
+    public function respondNotFound(string $message = 'Not found!'): JsonResponse
+    {
+        return $this->setStatusCode(404)->respondWithErrors($message);
+    }
+
+    /**
+     * @param array $data
+     * @return JsonResponse
+     */
+    public function respondCreated(array $data = []): JsonResponse
+    {
+        return $this->setStatusCode(201)->respond($data);
+    }
+
+    /**
+     * @param Request $request
+     * @return Request
+     */
+    protected function transformJsonBody(Request $request): Request
+    {
+        $data = json_decode($request->getContent(), true);
+
+        if ($data === null) {
+            return $request;
+        }
+
+        $request->request->replace($data);
+
+        return $request;
     }
 }

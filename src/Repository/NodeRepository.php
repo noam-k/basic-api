@@ -14,6 +14,36 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class NodeRepository extends ServiceEntityRepository
 {
+    /**
+     * @param Node $node
+     * @return array
+     */
+    public function transform(Node $node): array
+    {
+        return [
+            'id' => $node->getId(),
+            'name' => $node->getName(),
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    public function transformAll(): array
+    {
+        $nodesArray = [];
+
+        foreach ($this->findAll() as $node) {
+            $nodesArray[] = $this->transform($node);
+        }
+
+        return $nodesArray;
+    }
+
+    /**
+     * NodeRepository constructor.
+     * @param ManagerRegistry $registry
+     */
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Node::class);
