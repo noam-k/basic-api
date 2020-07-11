@@ -16,3 +16,10 @@
 ### IDE
 /.idea
 
+
+###> symfony/phpunit-bridge ###
+.phpunit
+.phpunit.result.cache
+/phpunit.xml
+.env.test
+###< symfony/phpunit-bridge ###
