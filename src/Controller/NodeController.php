@@ -42,7 +42,6 @@ class NodeController extends ApiController
             return $this->respondValidationError('Please provide a node name!');
         }
 
-        // persist the new movie
         $node = new Node();
         $node->setName($request->get('name'));
         $entityManager->persist($node);

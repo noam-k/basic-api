@@ -12,7 +12,6 @@ class Node
 {
     /**
      * @ORM\Id()
-     * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
      */
     private $id;
@@ -21,6 +20,18 @@ class Node
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $name;
+
+
+    /**
+     * @param int $id
+     * @return Node
+     */
+    public function setId(int $id): self
+    {
+        $this->id = $id;
+
+        return $this;
+    }
 
     public function getId(): ?int
     {
