@@ -32,14 +32,36 @@ class NodeControllerTest extends TestCase
 
     public function testIndex()
     {
+        $transformedNodes = [
+            [
+                'id' => 1,
+                'name' => 'v1',
+            ],
+            [
+                'id' => 2,
+                'name' => 'v2',
+            ],
+            [
+                'id' => 3,
+                'name' => 'v3',
+            ],
+            [
+                'id' => 4,
+                'name' => 'v4',
+            ],
+        ];
+
         $nodeRepository = $this->createMock(NodeRepository::class);
+        $nodeRepository->expects($this->any())
+            ->method('transformAll')
+            ->willReturn($transformedNodes);
 
         $entityManager = $this->createMock(EntityManager::class);
         $entityManager->expects($this->any())
             ->method('getRepository')
             ->willReturn($nodeRepository);
 
-        $expectedResult = new JsonResponse([]); // todo: why does it not return existing nodes?
+        $expectedResult = new JsonResponse($transformedNodes);
 
         $this->assertEquals($expectedResult, (new NodeController())->index($nodeRepository));
     }
