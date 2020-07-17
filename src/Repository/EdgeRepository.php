@@ -14,6 +14,32 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class EdgeRepository extends ServiceEntityRepository
 {
+    /**
+     * @param Edge $edge
+     * @return array
+     */
+    public function transform(Edge $edge): array
+    {
+        return [
+            's' => $edge->getS(),
+            't' => $edge->getT(),
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    public function transformAll(): array
+    {
+        $edgesArray = [];
+
+        foreach ($this->findAll() as $edge) {
+            $edgesArray[] = $this->transform($edge);
+        }
+
+        return $edgesArray;
+    }
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Edge::class);
