@@ -3,7 +3,6 @@
 namespace App\Tests\Controller;
 
 use App\Controller\NodeController;
-use App\Entity\Node;
 use App\Repository\NodeRepository;
 use Doctrine\ORM\EntityManager;
 use PHPUnit\Framework\TestCase;
@@ -27,6 +26,18 @@ class NodeControllerTest extends TestCase
         $this->assertEquals(
             new JsonResponse([],201),
             (new NodeController())->create($request, $nodeRepository, $entityManager)
+        );
+    }
+
+    public function testCreateError()
+    {
+        $nodeRepository = $this->createMock(NodeRepository::class);
+
+        $entityManager = $this->createMock(EntityManager::class);
+
+        $this->assertEquals(
+            new JsonResponse(['errors' => 'Please provide a node name!'], 422),
+            (new NodeController())->create(new Request(), $nodeRepository, $entityManager)
         );
     }
 
