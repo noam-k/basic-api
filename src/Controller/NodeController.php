@@ -84,4 +84,23 @@ class NodeController extends ApiController
 
         return $this->respond($data);
     }
+
+    /**
+     * @Route("/remove", "DELETE")
+     * @param Request $request
+     * @param NodeRepository $nodeRepository
+     * @param EntityManagerInterface $entityManager
+     * @return JsonResponse
+     */
+    public function remove(Request $request, NodeRepository $nodeRepository, EntityManagerInterface $entityManager) : JsonResponse
+    {
+        $id = $request->get('id');
+        if (!$id) {
+            return $this->respondNotFound('No such node!');
+        }
+
+        $entityManager->remove(($nodeRepository->find($id)));
+
+        return $this->respond([], 204);
+    }
 }
