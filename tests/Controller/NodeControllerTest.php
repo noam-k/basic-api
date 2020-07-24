@@ -69,11 +69,6 @@ class NodeControllerTest extends TestCase
             ->method('transformAll')
             ->willReturn($transformedNodes);
 
-        $entityManager = $this->createMock(EntityManager::class);
-        $entityManager->expects($this->any())
-            ->method('getRepository')
-            ->willReturn($nodeRepository);
-
         $expectedResult = new JsonResponse($transformedNodes);
 
         $this->assertEquals($expectedResult, (new NodeController())->index($nodeRepository));
