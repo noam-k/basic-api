@@ -3,6 +3,8 @@
 namespace App\Tests\Controller;
 
 use App\Controller\NodeController;
+use App\Entity\Edge;
+use App\Repository\EdgeRepository;
 use App\Repository\NodeRepository;
 use Doctrine\ORM\EntityManager;
 use PHPUnit\Framework\TestCase;
@@ -75,5 +77,39 @@ class NodeControllerTest extends TestCase
         $expectedResult = new JsonResponse($transformedNodes);
 
         $this->assertEquals($expectedResult, (new NodeController())->index($nodeRepository));
+    }
+
+    public function testGetNeighbors()
+    {
+        $edgeEntityT = [];
+        $edgeEntityS = [];
+
+        $edgesT = [2, 3, 5];
+        $edgesS = [9, 10];
+
+        foreach ($edgesT as $value) {
+            $edgeEntityT[] = (new Edge())->setS(6)->setT($value);
+        }
+
+        foreach ($edgesS as $value) {
+            $edgeEntityS[] = (new Edge())->setT(6)->setS($value);
+        }
+
+        $nodeRepository = $this->createMock(NodeRepository::class);
+
+        $edgeRepositoryMock = $this->createMock(EdgeRepository::class);
+        $edgeRepositoryMock->expects($this->exactly(2))
+            ->method('findBy')
+            ->willReturnOnConsecutiveCalls($edgeEntityT, $edgeEntityS);
+
+        $entityManager = $this->createMock(EntityManager::class);
+        $entityManager->expects($this->any())
+            ->method('getRepository')
+            ->willReturn($edgeRepositoryMock);
+
+        $this->assertEquals(
+            new JsonResponse([2, 3, 5, 9, 10]),
+            (new NodeController())->getNeighbors(new Request(['id' => 6]), $nodeRepository, $entityManager)
+        );
     }
 }
