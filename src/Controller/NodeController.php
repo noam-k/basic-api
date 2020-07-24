@@ -55,9 +55,10 @@ class NodeController extends ApiController
      * @Route("/neighbors", methods="GET")
      * @param Request $request
      * @param NodeRepository $nodeRepository
+     * @param EntityManagerInterface $entityManager
      * @return JsonResponse
      */
-    public function getNeighbors(Request $request, NodeRepository $nodeRepository) : JsonResponse
+    public function getNeighbors(Request $request, NodeRepository $nodeRepository, EntityManagerInterface $entityManager) : JsonResponse
     {
         $data = [];
 
@@ -71,7 +72,7 @@ class NodeController extends ApiController
             return $this->respondNotFound('No such node!');
         }
 
-        $edgeRepository = $this->getDoctrine()->getRepository(Edge::class);
+        $edgeRepository = $entityManager->getRepository(Edge::class);
 
         foreach ($edgeRepository->findBy(['s' => $id]) as $edge) {
             $data[] = $edge->getT();
